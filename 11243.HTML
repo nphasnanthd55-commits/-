@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift for U 🎂✨</title>
+    <!-- นำเข้าฟอนต์น่ารักๆ จาก Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Mali', cursive;
+            background: linear-gradient(135deg, #ffd1dc 0%, #e8dff5 50%, #fce1e4 100%);
+        }
+
+        /* เอฟเฟกต์หัวใจลอยหลังพื้นหลัง */
+        .heart-bg {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.6);
+            font-size: 20px;
+            animation: float 6s infinite ease-in;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* การ์ดหลักหน้าแรก - ปรับให้อยู่ตรงกลางแบบสมบูรณ์ */
+        .card-container {
+            background: #ffffff;
+            border: 4px solid #f8a5c2;
+            border-radius: 24px;
+            padding: 30px 25px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(248, 165, 194, 0.4);
+            
+            /* เทคนิคจัดให้อยู่ตรงกลางหน้าจอเป๊ะๆ */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .pixel-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: #ff6b81;
+            margin-bottom: 8px;
+        }
+
+        /* ข้อความบอกว่าเค้กใคร */
+        .owner-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ff75a0;
+            margin-bottom: 12px;
+            background: #ffeef2;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* โซนเค้กวันเกิด */
+        .cake-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 10px auto;
+            cursor: pointer;
+        }
+
+        .cake-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* โซนเทียนบนเค้ก */
+        .candles-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            height: 35px;
+            align-items: flex-end;
+            z-index: 2;
+        }
+
+        .candle {
+            width: 7px;
+            height: 24px;
+            background: linear-gradient(to bottom, #ff80ab, #ff4081);
+            border-radius: 3px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .candle.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* เปลวไฟ */
+        .flame {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 9px;
+            height: 14px;
+            background: orange;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 8px gold, 0 0 12px orange;
+            animation: flicker 0.6s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.15) rotate(3deg); }
+        }
+
+        /* ข้อความคำแนะนำ */
+        .hint-text {
+            color: #ff6b81;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 8px;
+            margin-bottom: 12px;
+            min-height: 24px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.8s ease;
+        }
+
+        .hint-text.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ปุ่มกด */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 0.5s ease;
+        }
+
+        .btn-group.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .btn {
+            font-family: 'Mali', cursive;
+            font-weight: 700;
+            padding: 10px 22px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .btn-back {
+            background-color: #f1f2f6;
+            color: #747d8c;
+        }
+
+        .btn-open {
+            background-color: #ff6b81;
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 107, 129, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn:hover {
+            transform: scale(1.08) !important;
+        }
+
+        /* หน้าป๊อบอัพแบบ Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 420px;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            color: #ff6b81;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .single-photo-box {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+
+        .single-photo-box img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 3px solid #ffeaa7;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .typewriter-text {
+            color: #57606f;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 15px 0;
+            min-height: 50px;
+            text-align: left;
+            background: #fff0f3;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed #ff80ab;
+        }
+
+        .btn-close {
+            background-color: #a4b0be;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-family: 'Mali', cursive;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- เพลงประกอบ -->
+    <audio id="bgm" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-game-level-music-689.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- หน้าแรก: การ์ดกล่องของขวัญ + เค้กปักเทียน -->
+    <div class="card-container">
+        <div class="pixel-title">Gift for U</div>
+        
+        <div class="owner-title">🎂 เค้กวันเกิดของใครครับเนี่ยย 🐻💖</div>
+        
+        <!-- เค้กปักเทียน -->
+        <div class="cake-wrapper" onclick="addCandle()">
+            <div class="candles-container">
+                <div class="candle" id="c1"><div class="flame"></div></div>
+                <div class="candle" id="c2"><div class="flame"></div></div>
+                <div class="candle" id="c3"><div class="flame"></div></div>
+            </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/2682/2682446.png" class="cake-img" alt="Cake">
+        </div>
+
+        <!-- ข้อความคำแนะนำ -->
+        <div class="hint-text" id="hintText">อือ เหมือนยังขาดอะไรไป ช่วยปักเทียนหน่อยสิ >< </div>
+        
+        <!-- ปุ่มกด -->
+        <div class="btn-group" id="btnGroup">
+            <button class="btn btn-back" onclick="alert(' จะรีบออกไปไหน ให้โอกาสกดใหม่ 😛')">Go Back</button>
+            <button class="btn btn-open" id="openBtn" onclick="openGift()">Open It ✨</button>
+        </div>
+    </div>
+
+    <!-- หน้าป๊อบอัพเมื่อกด Open It -->
+    <div class="modal-overlay" id="giftModal">
+        <div class="modal-content">
+            <div class="modal-title">Happy Birthday to Leo 💖</div>
+            
+            <div class="single-photo-box">
+                <img src="https://picsum.photos/400/300" alt="Main Photo">
+            </div>
+
+            <div class="typewriter-text" id="typingText"></div>
+
+            <button class="btn-close" onclick="closeGift()">Close ✨</button>
+        </div>
+    </div>
+
+    <script>
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement('div');
+                heart.className = 'heart-bg';
+                heart.innerHTML = '💗';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(heart);
+            }
+        }
+        createHearts();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('hintText').classList.add('show');
+            }, 600);
+        });
+
+        let candleCount = 0;
+        const maxCandles = 3;
+
+        function addCandle() {
+            if (candleCount < maxCandles) {
+                candleCount++;
+                document.getElementById(`c${candleCount}`).classList.add('active');
+                
+                if (candleCount === maxCandles) {
+                    document.getElementById('hintText').innerText = 'เย้! ปักครบแล้วน้าา เก่งมาก ✨';
+                    document.getElementById('btnGroup').classList.add('show');
+                } else {
+                    document.getElementById('hintText').innerText = `เย้! ปักไปแล้ว ${candleCount} เล่ม จิ้มต่อเลย >///<`;
+                }
+            }
+        }
+
+        const message = "สุขสันต์วันเกิดนะคนเก่ง! 🎂 ขอให้มีความสุขมากๆ ยิ้มเยอะๆ ในทุกๆ วัน มีเค้าอยู่ข้างๆ แบบนี้ไปนานๆ เลยนะ รักคุณที่สุดในโลกเลย!💖✨";
+        let index = 0;
+        let isTyping = false;
+
+        function typeWriter() {
+            if (index < message.length) {
+                document.getElementById("typingText").innerHTML += message.charAt(index);
+                index++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+
+        function openGift() {
+            document.getElementById("giftModal").classList.add("active");
+            
+            const music = document.getElementById("bgm");
+            music.play().catch(e => console.log("Audio play blocked"));
+
+            if (!isTyping) {
+                isTyping = true;
+                document.getElementById("typingText").innerHTML = "";
+                index = 0;
+                typeWriter();
+            }
+        }
+
+        function closeGift() {
+            document.getElementById("giftModal").classList.remove("active");
+        }
+    </script>
+</body>
+</html>
